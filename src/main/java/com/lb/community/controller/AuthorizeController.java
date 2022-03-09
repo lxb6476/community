@@ -12,6 +12,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import javax.servlet.http.HttpServletRequest;
+
 @Controller
 public class AuthorizeController {
 
@@ -35,7 +37,8 @@ public class AuthorizeController {
 
 
     @GetMapping("callback")
-    public String callback(@RequestParam(name = "code") String code) {
+    public String callback(@RequestParam(name = "code") String code,
+                           HttpServletRequest request) {
 
         GiteeTokenDTO giteeTokenDTO = new GiteeTokenDTO();
         giteeTokenDTO.setGrant_type(grantType);
@@ -47,8 +50,20 @@ public class AuthorizeController {
 
         String accessToken = giteeProvider.getAccessToken(giteeTokenDTO);
         GiteeUser user = giteeProvider.getUser(accessToken);
-        System.out.println(user.getName());
-        System.out.println(user.getId());
-        return "index";
+//        System.out.println(user.getName());
+//        System.out.println(user.getId());
+
+
+        if (user != null) {
+            // 登录成功  写cookie和session
+            request.getSession().setAttribute("user",user);
+            // redirect:改变地址，并渲染       默认当前地址不会变，页面重新渲染
+            return "redirect:index";
+
+        } else {
+            // 登录失败 重新登录
+            return "redirect:index";
+        }
+
     }
 }
