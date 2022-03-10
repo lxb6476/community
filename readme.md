@@ -19,3 +19,18 @@ up主建议直接从官方文档中复制过来用，不要死磕，用熟练了
 存放第三方库的功能支持。
 2. 函数参数超过两个，要把其封装成对象来管理，可以放到dto包中（data transfer object） 命名规范可以参考：https://developer.aliyun.com/article/715619
 3. 遇到不懂问题，或者有简单思路可以去搜索关键字（不要用包含上下文的语义）
+
+
+## 数据库创建
+```mysql
+create table user
+(
+    id           int auto_increment
+        primary key,
+    account_id   varchar(100) null,
+    name         varchar(50)  null,
+    token        char(36)     null,
+    gmt_create   bigint       null,
+    gmt_modified bigint       null
+);
+```
